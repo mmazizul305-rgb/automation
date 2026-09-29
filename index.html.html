@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #0f2027, #203a63, #4b2a7b);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Colorful blobs behind the glass so the blur is visible */
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(10px);
+    z-index: 0;
+  }
+  body::before {
+    width: 320px; height: 320px;
+    background: radial-gradient(circle at 30% 30%, #ff7eb3, #ff758c);
+    top: 8%; left: 10%;
+  }
+  body::after {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle at 60% 40%, #4facfe, #00f2fe);
+    bottom: 6%; right: 8%;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    padding: 34px 30px 30px;
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08));
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.35);
+    /* Bevel: light top-left edge, dark bottom-right edge */
+    box-shadow:
+      inset 2px 2px 3px rgba(255,255,255,0.6),
+      inset -3px -3px 6px rgba(0,0,0,0.25),
+      0 25px 50px rgba(0,0,0,0.35);
+  }
+
+  label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input, select {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    /* Bevel: pressed-in look */
+    box-shadow:
+      inset 2px 2px 5px rgba(0,0,0,0.35),
+      inset -2px -2px 4px rgba(255,255,255,0.25);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  input::placeholder { color: rgba(255,255,255,0.6); }
+  input:focus, select:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.2);
+  }
+  select option { color: #222; }
+  input[type="date"] { color-scheme: dark; }
+
+  button {
+    margin-top: 28px;
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: linear-gradient(145deg, rgba(120,160,255,0.85), rgba(90,60,200,0.85));
+    /* Bevel: raised button */
+    box-shadow:
+      inset 2px 2px 4px rgba(255,255,255,0.55),
+      inset -3px -3px 6px rgba(0,0,0,0.35),
+      0 8px 18px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  button:hover { transform: translateY(-1px); }
+  button:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 3px 3px 6px rgba(0,0,0,0.4),
+      inset -2px -2px 4px rgba(255,255,255,0.3),
+      0 3px 8px rgba(0,0,0,0.3);
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  #msg {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .success { color: #a8ffcb; }
+  .error { color: #ffb3ab; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <form id="entryForm">
+    <label for="name">Name</label>
+    <input type="text" id="name" required>
+
+    <label for="whatsapp">WhatsApp Number</label>
+    <input type="tel" id="whatsapp" pattern="[0-9]{10,13}" placeholder="10-digit number" required>
+
+    <label for="email">Email ID</label>
+    <input type="email" id="email" required>
+
+    <label for="gender">Gender</label>
+    <select id="gender" required>
+      <option value="">Select</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" required>
+
+    <button type="submit" id="submitBtn">Submit</button>
+    <div id="msg"></div>
+  </form>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSbzjLqZwKbk85PiYqtb3avuFQWxaAyADiGE72g6d2Qs0AK_CDcQ6EVa_f8XCV2P4q/exec";
+  const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1MpJPtWHIxMUQg2Io6WVIeea1vPNkhWRJ";
+
+  const form = document.getElementById('entryForm');
+  const msg = document.getElementById('msg');
+  const btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+    msg.textContent = "";
+    msg.className = "";
+
+    const data = {
+      name: document.getElementById('name').value,
+      whatsapp: document.getElementById('whatsapp').value,
+      email: document.getElementById('email').value,
+      gender: document.getElementById('gender').value,
+      dob: document.getElementById('dob').value
+    };
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(data)
+    })
+    .then(() => {
+      msg.textContent = "Saved successfully! Opening your Drive folder...";
+      msg.className = "success";
+      form.reset();
+      window.open(DRIVE_FOLDER_URL, "_blank");
+    })
+    .catch(err => {
+      msg.textContent = "Error: your data was not saved. Please try again.";
+      msg.className = "error";
+      console.error(err);
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = "Submit";
+    });
+  });
+</script>
+
+</body>
+</html>
